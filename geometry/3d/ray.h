@@ -6,8 +6,8 @@
 
 class Ray {
 public:
-    Point3f o;
-    Vector3f d;
+    Point3f origin;
+    Vector3f direction;
 };
 
 #endif //RENDERENGINE_RAY_H
