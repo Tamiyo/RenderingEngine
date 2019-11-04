@@ -9,7 +9,21 @@ public:
     /* Constructors */
     Vector3() { x = y = z = 0; }
 
-    Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
+    Vector3(T x, T y, T z) : x(x), y(y), z(z) { assert(IsNotNull()); }
+
+    explicit Vector3(const Point3<T> &p) {
+        assert(p.IsNotNull());
+        x = p.x;
+        y = p.y;
+        z = p.z;
+    }
+
+    explicit Vector3(const Normal3<T> &n) {
+        assert(n.IsNotNull());
+        x = n.x;
+        y = n.y;
+        z = n.z;
+    }
 
     T operator[](int i) const {
         assert(i >= 0 && i < 3);
@@ -80,10 +94,12 @@ public:
     }
 
     Vector3<T> operator/(const T &s) const {
+        assert(s != 0);
         return Vector3<T>(x / s, y / s, z / s);
     }
 
     Vector3<T> &operator/=(T s) {
+        assert(s != 0);
         x /= s;
         y /= s;
         z /= s;
@@ -110,41 +126,5 @@ public:
     T x, y, z;
 
 };
-
-template<typename T>
-inline T DotProduct(const Vector3<T> &v1, const Vector3<T> &v2) {
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-}
-
-template<typename T>
-inline Vector3<T> CrossProduct(const Vector3<T> &v1, const Vector3<T> &v2) {
-    T v1x = v1.x, v1y = v1.y, v1z = v1.z;
-    T v2x = v2.x, v2y = v2.y, v2z = v2.z;
-
-    return Vector3<T>((v1y * v2z) - (v1z * v2y),
-                      (v1z * v2x) - (v1x * v2z),
-                      (v1x * v2y) - (v1y * v2x));
-}
-
-template<typename T>
-inline Vector3<T> Normalize(const Vector3<T> &v) {
-    return v / v.Length();
-}
-
-template<typename T>
-inline T MinComponent(const Vector3<T> &v) {
-    return std::min(v.x, std::min(v.y, v.z));
-}
-
-template<typename T>
-inline T MaxComponent(const Vector3<T> &v) {
-    return std::max(v.x, std::max(v.y, v.z));
-}
-
-template<typename T>
-inline int MaxDimension(const Vector3<T> &v) {
-    return (v.x > v.y) ? ((v.x > v.z) ? 0 : 2) :
-           ((v.y > v.z) ? 1 : 2);
-}
 
 #endif //RENDERENGINE_VECTOR3_H

@@ -9,7 +9,7 @@ public:
     /* Constructors */
     Point2() { x = y = 0; }
 
-    Point2(T x, T y) : x(x), y(y) {}
+    Point2(T x, T y) : x(x), y(y) { assert(IsNotNull()); }
 
     T operator[](int i) const {
         assert(i >= 0 && i < 2);
@@ -95,9 +95,5 @@ public:
     T x, y;
 };
 
-template<typename T>
-inline float Distance(const Point2<T> &p1, const Point2<T> &p2) {
-    return (p1 - p2).Length();
-}
 
 #endif //RENDERENGINE_POINT2_H

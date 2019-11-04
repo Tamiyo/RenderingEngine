@@ -9,7 +9,7 @@ public:
     /* Constructors */
     Vector2() { x = y = 0; }
 
-    Vector2(T x, T y) : x(x), y(y) {}
+    Vector2(T x, T y) : x(x), y(y) { assert(IsNotNull()); }
 
     T operator[](int i) const {
         assert(i >= 0 && i < 2);
@@ -73,10 +73,12 @@ public:
     }
 
     Vector2<T> operator/(const T &s) const {
+        assert(s != 0);
         return Vector2<T>(x / s, y / s);
     }
 
     Vector2<T> &operator/=(const T &s) {
+        assert(s != 0);
         x /= s;
         y /= s;
         return *this;
@@ -102,33 +104,6 @@ public:
     T x, y;
 
 };
-
-template<typename T>
-inline Vector2<T>
-
-Normalize(const Vector2<T> &v) {
-    return v / v.Length();
-}
-
-template<typename T>
-inline T MinComponent(const Vector2<T> &v) {
-    return std::min(v.x, v.y);
-}
-
-template<typename T>
-inline T MaxComponent(const Vector2<T> &v) {
-    return std::max(v.x, v.y);
-}
-
-template<typename T>
-inline int MaxDimension(const Vector2<T> &v) {
-    return (v.x > v.y) ? 0 : 1;
-}
-
-template<typename T>
-inline T DotProduct(const Vector2<T> &v1, const Vector2<T> &v2) {
-    return v1.x * v2.x + v1.y * v2.y;
-}
 
 
 #endif //RENDERENGINE_VECTOR2_H

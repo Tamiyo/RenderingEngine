@@ -8,6 +8,8 @@
 #include "geometry/3d/point3.h"
 #include "geometry/3d/vector3.h"
 
+#include "geometry/arithmetic.h"
+
 int main() {
     Vector3<float> v1 = Vector3<float>(5, 7, 9);
     Vector3<float> v2 = Vector3<float>(6, 10, 4);
@@ -18,6 +20,5 @@ int main() {
     Vector2<float> _v3 = _v1;
 
     fmt::print("v1 {} == v3 {} : {}\n", v1, v3, v1 == v3);
-    fmt::print("_v1 X _v3 : {}\n", CrossProduct(_v1, _v3));
-
+    fmt::print("v1 X v3 : {}\n", CrossProduct(v1, v2));
 }

@@ -9,7 +9,7 @@ public:
     /* Constructors */
     Point3() { x = y = z = 0; }
 
-    Point3(T x, T y, T z) : x(x), y(y), z(z) {}
+    Point3(T x, T y, T z) : x(x), y(y), z(z) { assert(IsNotNull()); }
 
     T operator[](int i) const {
         assert(i >= 0 && i < 3);
@@ -96,14 +96,8 @@ public:
         return x != p.x || y != p.y || z != p.z;
     }
 
-    Point3<T> operator-() const { return Point3<T>(-x, -y, -z); }
-
     T x, y, z;
 };
 
-template<typename T>
-inline float Distance(const Point3<T> &p1, const Point3<T> &p2) {
-    return (p1 - p2).Length();
-}
 
 #endif //RENDERENGINE_POINT3_H
