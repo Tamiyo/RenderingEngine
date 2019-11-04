@@ -1,7 +1,11 @@
 #ifndef RENDERENGINE_ARITHMETIC_H
 #define RENDERENGINE_ARITHMETIC_H
 
-#include "base/base.h"
+#include "2d/point2.h"
+#include "2d/vector2.h"
+#include "3d/vector3.h"
+#include "3d/point3.h"
+#include "3d/normal3.h"
 
 
 template<typename T>

@@ -1,7 +1,13 @@
 #ifndef RENDERENGINE_VECTOR2_H
 #define RENDERENGINE_VECTOR2_H
 
-#include "../base/base.h"
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
+#include "point2.h"
+
+template<typename T> class Point2;
 
 template<typename T>
 class Vector2 {
@@ -63,7 +69,7 @@ public:
     }
 
     Vector2<T> operator*(const T &s) const {
-        return Vector3<T>(x * s, y * s);
+        return Vector2<T>(x * s, y * s);
     }
 
     Vector2<T> &operator*=(const T &s) {
@@ -105,5 +111,7 @@ public:
 
 };
 
+typedef Vector2<float> Vector2f;
+typedef Vector2<int> Vector2i;
 
 #endif //RENDERENGINE_VECTOR2_H

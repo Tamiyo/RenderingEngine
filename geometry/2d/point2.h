@@ -1,7 +1,13 @@
 #ifndef RENDERENGINE_POINT2_H
 #define RENDERENGINE_POINT2_H
 
-#include "../base/base.h"
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
+#include "vector2.h"
+
+template<typename T> class Vector2;
 
 template<typename T>
 class Point2 {
@@ -44,24 +50,24 @@ public:
         return Point2<T>(x + v.x, y + v.y);
     }
 
-    Point2<T> &operator+=(const Vector2<T> &v) {
+    Point2<T> &operator+=(const Vector2 <T> &v) {
         assert(v.IsNotNull());
         x += v.x;
         y += v.y;
         return *this;
     }
 
-    Vector2<T> operator-(const Point2<T> &p) const {
+    Vector2 <T> operator-(const Point2<T> &p) const {
         assert(p.IsNotNull());
         return Vector2<T>(x - p.x, y - p.y);
     }
 
-    Point2<T> operator-(const Vector2<T> &v) const {
+    Point2<T> operator-(const Vector2 <T> &v) const {
         assert(v.IsNotNull());
         return Point2<T>(x - v.x, y - v.y);
     }
 
-    Point2<T> &operator-=(const Vector2<T> &v) {
+    Point2<T> &operator-=(const Vector2 <T> &v) {
         assert(v.IsNotNull());
         x -= v.x;
         y -= v.y;
@@ -95,5 +101,7 @@ public:
     T x, y;
 };
 
+typedef Point2<float> Point2f;
+typedef Point2<int> Point2i;
 
 #endif //RENDERENGINE_POINT2_H

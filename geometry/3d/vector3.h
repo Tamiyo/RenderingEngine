@@ -1,7 +1,15 @@
 #ifndef RENDERENGINE_VECTOR3_H
 #define RENDERENGINE_VECTOR3_H
 
-#include "../base/base.h"
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
+#include "normal3.h"
+#include "point3.h"
+
+template<typename T> class Point3;
+template<typename T> class Normal3;
 
 template<typename T>
 class Vector3 {
@@ -126,5 +134,8 @@ public:
     T x, y, z;
 
 };
+
+typedef Vector3<float> Vector3f;
+typedef Vector3<int> Vector3i;
 
 #endif //RENDERENGINE_VECTOR3_H

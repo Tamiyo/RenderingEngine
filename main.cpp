@@ -7,7 +7,6 @@
 #include "geometry/2d/vector2.h"
 #include "geometry/3d/point3.h"
 #include "geometry/3d/vector3.h"
-
 #include "geometry/arithmetic.h"
 
 int main() {

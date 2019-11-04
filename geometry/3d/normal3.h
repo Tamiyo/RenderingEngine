@@ -1,7 +1,13 @@
 #ifndef RENDERENGINE_NORMAL3_H
 #define RENDERENGINE_NORMAL3_H
 
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
 #include "vector3.h"
+
+template<typename T> class Vector3;
 
 template<typename T>
 class Normal3 {

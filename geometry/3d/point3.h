@@ -1,7 +1,13 @@
 #ifndef RENDERENGINE_POINT3_H
 #define RENDERENGINE_POINT3_H
 
-#include "../base/base.h"
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
+#include "vector3.h"
+
+template<typename T> class Vector3;
 
 template<typename T>
 class Point3 {
@@ -99,5 +105,7 @@ public:
     T x, y, z;
 };
 
+typedef Point3<float> Point3f;
+typedef Point3<int> Point3i;
 
 #endif //RENDERENGINE_POINT3_H
