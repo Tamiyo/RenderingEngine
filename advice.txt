@@ -1,0 +1,36 @@
+Step 1: Learn Linear Algebra
+First, learn Linear Algebra. No, I don't mean Algebra taught in middle school. I mean Linear Algebra concepts such as Vectors and Matrices. Focus on learning vector and matrices operations, especially dot product, cross product, space transformations.
+
+Step 2: Learn C++ (or any language you want)
+Next, learn how to program. I suggest learning C++. At this point, you don't have to be an expert in coding. But do learn about classes, methods, inheritance, polymorphism and encapsulation.
+
+Step 3: Develop a Math Engine
+Then, use your knowledge of vectors, matrices, and coding to develop a math engine. Operations such as Dot product, cross product and space transformation are used extensively in game engine development.
+
+Step 4: Learn Computer Graphics
+Now comes the fun part. Get acquainted with Computer Graphics concepts, especially the Rendering Pipeline and Shaders. Avoid coding and using the OpenGL API for now. The OpenGL API is confusing to understand if you have limited knowledge of computer graphics concepts.
+
+Step 5: Learn OpenGL and do a lot of projects
+Once you feel comfortable with Computer Graphics concepts, learn about the OpenGL API and OpenGL Shaders. Do as many projects as possible. Learn how to render characters, how to rotate and translate characters. Learn how texturing and lighting works with OpenGL. Again, this is the fun part, and I suggest doing as many projects as you can.
+
+Step 6: Learn Design Patterns
+The next step to becoming a game engine developer is to learn API architecture. A game engine is simply an API, a framework, that takes care of all the rendering, physics and mathematical operations. It is paramount that you develop an API that is modular, flexible, maintainable and adaptable.
+
+To develop an API, you will need to learn Design Patterns. The most common design patterns are Singleton, Observer, Strategy, Composite, Factory among others.
+
+Step 7: Develop a Rendering Engine
+At this stage, you are ready to combine your knowledge of Linear Algebra, Computer Graphics, OpenGL and Design Patterns to develop a rendering engine.
+
+Step 8: Review Newton's Laws of Motion
+Once you have completed the rendering engine, is time to work on the hardest part of the engine, i.e., the Physics Engine.
+
+The good news is that you don't need to be a physicist to develop a Physics Engine, but you do need to know Newton's Laws of Motion and how they are implemented using algorithms such as the Runge-Kutta algorithm.
+
+Step 9: Learn Computational Geometry Algorithms
+A game engine is not a game engine without collision detection. To develop a collision detection system, you need to learn about Computation Geometry algorithms such as GJK, BVH, and Sutherland-Hodgman. These algorithms are used to detect if a collision occurred, where did it occur and which objects are most likely to collide.
+
+Step 10: Develop a Physics Engine
+Once you are acquainted with the algorithms mentioned above, you should be able to develop a physics engine with a collision detection system.
+
+Step 11: Develop a game, Test & Repeat
+Congratulations, you now have a Game Engine. Develop as many games as you can and test the game engine as much as possible. Fix bugs, implement new features, develop games and repeat. Trust me; this is the best part of all.
