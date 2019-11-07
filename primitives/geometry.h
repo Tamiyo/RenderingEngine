@@ -100,6 +100,10 @@ public:
         return Vector3<T>(x * s, y * s, z * s);
     }
 
+    Vector3<T> operator*(const Vector3<T> &v) const {
+        return Vector3<T>(x * v.x, y * v.y, z * v.z);
+    }
+
     Vector3<T> &operator*=(const T &s) {
         x *= s;
         y *= s;
@@ -148,6 +152,10 @@ typedef Vector3<int> Vector3i;
 
 class Ray {
 public:
+    Ray() {
+        origin = direction = 0;
+    }
+
     Ray(const Vector3f &origin, const Vector3f &direction) : origin(origin), direction(direction) {
         assert(origin.IsNotNull() && direction.IsNotNull());
     }

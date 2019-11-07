@@ -11,13 +11,16 @@ public:
     Sphere() {
         radius = 0;
         center = 0;
+        material = nullptr;
     }
 
-    Sphere(const Vector3f &center, float radius) : center(center), radius(radius) {
-        assert(!std::isnan(radius) && center.IsNotNull());
+    Sphere(const Vector3f &center, float radius, Material *material) : center(center), radius(radius),
+                                                                       material(material) {
+        assert(!std::isnan(radius) && center.IsNotNull() && material);
     }
 
-    ShapeIntersectionBundle *intersect(const Ray &ray, const double &t_min, const double &t_max) const override {
+    bool intersect(const Ray &ray, const double &t_min, const double &t_max,
+                   ShapeIntersectionBundle &bundle) const override {
 
         Vector3f oc = ray.origin - center;
 
@@ -27,26 +30,29 @@ public:
         float discriminant = b * b - a * c;
 
         if (discriminant > 0) {
-            auto temp = float(-b - std::sqrt(b * b - a * c) / a);
+            auto temp = float(-b - std::sqrt(discriminant) / a);
             if (temp < t_max && temp > t_min) {
-                float time = temp;
-                Vector3f point = ray.pointOnRayAtTime(time);
-                Vector3f normal = (point - center) / radius;
-                return new ShapeIntersectionBundle(time, point, normal);
+                bundle.time = temp;
+                bundle.point = ray.pointOnRayAtTime(temp);
+                bundle.normal = (bundle.point - center) / radius;
+                bundle.material = material;
+                return true;
             }
-            temp = float(-b + std::sqrt(b * b - a * c) / a);
+            temp = float(-b + std::sqrt(discriminant) / a);
             if (temp < t_max && temp > t_min) {
-                float time = temp;
-                Vector3f point = ray.pointOnRayAtTime(time);
-                Vector3f normal = (point - center) / radius;
-                return new ShapeIntersectionBundle(time, point, normal);
+                bundle.time = temp;
+                bundle.point = ray.pointOnRayAtTime(temp);
+                bundle.normal = (bundle.point - center) / radius;
+                bundle.material = material;
+                return true;
             }
         }
-        return nullptr;
+        return false;
     }
 
     float radius;
     Vector3f center;
+    Material *material;
 };
 
 #endif //RENDERENGINE_SPHERE_H

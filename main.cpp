@@ -14,6 +14,7 @@
 #include "film/color.h"
 #include "shapes/sphere.h"
 #include "algorithm/raytracing.h"
+#include "materials/material.h"
 
 
 int screenWidth = 200;
@@ -44,9 +45,10 @@ int main() {
     /* Shape Setup */
     /*-------------*/
     std::vector<Shape *> shapes;
-    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5));
-    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100));
-
+    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5, new Lambertian(Vector3f(0.8, 0.3, 0.3))));
+    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100, new Lambertian(Vector3f(0.8, 0.8, 0.0))));
+    shapes.push_back(new Sphere(Vector3f(1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.6, 0.2))));
+    shapes.push_back(new Sphere(Vector3f(-1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.8, 0.8))));
 
 
     /*-----------*/
@@ -66,22 +68,23 @@ int main() {
         for (int x = 0; x < screenWidth; x++) {
 
             // Creating the background color
-            Color color(0, 0, 0);
+            Vector3f color(0, 0, 0);
 
-            // For each sample, get a better pixel value. Note this will be replaced on a per-object basis
+            // For each sample, get a better pixel value by averaging the average color values instead of
+            // performing only a single iteration.
             for (int i = 0; i < samples; i++) {
                 // Cast a ray from the camera "eye" origin through each pixel
                 float u = (float(x) + GenerateRandomNumber()) / float(screenWidth);
                 float v = (float(y) + GenerateRandomNumber()) / float(screenHeight);
 
                 Ray ray = camera.GetRay(u, v);
-                color = color + TraceRay(camera, ray, shapes);
+                color += TraceRay(ray, shapes, 0);
             }
 
-            color = (color / samples);
-            color = Color(std::sqrt(color.r), std::sqrt(color.g), std::sqrt(color.b));
-            color = Color(int(color.r * 255.99), int(color.g * 255.99), int(color.b * 255.99));
-            out << (int) color.r << " " << (int) color.g << " " << (int) color.b << "\n";
+            color = (color / float(samples));
+            color = Vector3f(std::sqrt(color.x), std::sqrt(color.y), std::sqrt(color.z));
+            color = Vector3f(color.x * 255.99, color.y * 255.99, color.z * 255.99);
+            out << (int) color.x << " " << (int) color.y << " " << (int) color.z << "\n";
 
             // distanceMin = infinity
             // For every object in the scene

@@ -10,56 +10,47 @@
 
 #include "../primitives/geometry.h"
 #include "../shapes/shape.h"
+#include "../materials/material.h"
+#include "bundle.h"
+#include "random.h"
 
-
-float GenerateRandomNumber() {
-//    std::mt19937 randomNumberGenerator;
-//    randomNumberGenerator.seed(3);
-//
-//    std::uniform_real_distribution<float> uniformRealDistribution(0, 1);
-//    return uniformRealDistribution(randomNumberGenerator);
-     return rand() / (RAND_MAX + 1.0);
-}
-
-
-Vector3f GenerateRandomVectorOnUnitSphere() {
-    Vector3f p;
-    do {
-        p = (Vector3f(GenerateRandomNumber(), GenerateRandomNumber(), GenerateRandomNumber()) * 2.0) - Vector3f(1.0);
-    } while (p.LengthSquared() >= 1.0);
-    return p;
-}
-
-ShapeIntersectionBundle *
-ShapeIntersectsWithRay(const Ray &ray, float t_min, float t_max, const std::vector<Shape *> &shapes) {
+bool ShapeIntersectsWithRay(const Ray &ray, float t_min, float t_max, const std::vector<Shape *> &shapes,
+                            ShapeIntersectionBundle &bundle) {
+    ShapeIntersectionBundle tempBundle;
+    bool intersected = false;
     float closest = t_max;
 
-    ShapeIntersectionBundle *intersectionBundle = nullptr;
-
     for (auto shape : shapes) {
-        ShapeIntersectionBundle *tempBundle = shape->intersect(ray, t_min, closest);
-        if (tempBundle && tempBundle->time > 0.0) {
-            if (tempBundle->time < closest) {
-                closest = tempBundle->time;
-                intersectionBundle = tempBundle;
-            }
+        if (shape->intersect(ray, t_min, closest, tempBundle)) {
+            intersected = true;
+            closest = tempBundle.time;
+            bundle = tempBundle;
         }
     }
-    return intersectionBundle;
+    return intersected;
 }
 
-Color TraceRay(const Camera &camera, const Ray &ray, const std::vector<Shape *> &shapes) {
-    ShapeIntersectionBundle *intersectionBundle = ShapeIntersectsWithRay(ray, 0.001f, FLT_MAX, shapes);
+Vector3f TraceRay(const Ray &ray, const std::vector<Shape *> &shapes, const int depth) {
+    ShapeIntersectionBundle bundle;
 
-    if (intersectionBundle != nullptr) {
+    if (ShapeIntersectsWithRay(ray, 0.001f, FLT_MAX, shapes, bundle)) {
+        Ray scattered;
+        Vector3f attenuation;
+
+        if (depth < 50 && bundle.material->Scatter(ray, bundle, attenuation, scattered)) {
+            return attenuation * TraceRay(scattered, shapes, depth + 1);
+        } else {
+            return Vector3f(0);
+        }
+
         Vector3f unitSphereVector = GenerateRandomVectorOnUnitSphere();
-        Vector3f target(intersectionBundle->point + intersectionBundle->normal + unitSphereVector);
-        return (TraceRay(camera, Ray(intersectionBundle->point, target - intersectionBundle->point), shapes) * 0.5);
+        Vector3f target(bundle.point + bundle.normal + unitSphereVector);
+        return TraceRay(Ray(bundle.point, target - bundle.point), shapes, depth + 1) * 0.5;
     } else {
         // TODO [Placeholder] - Remove this when actual background colors get added
-        Vector3f unit_direction = Normalize(ray.direction);
-        double t = 0.5 * (unit_direction.y + 1.0);
-        return Color((Vector3f(1.0) * (1.0 - t) + Vector3f(0.5, 0.7, 1.0) * (t)));
+        Vector3f unitDirection = Normalize(ray.direction);
+        double t = 0.5 * (unitDirection.y + 1.0);
+        return (Vector3f(1.0) * (1.0 - t) + Vector3f(0.5, 0.7, 1.0) * (t));
     }
 }
 
