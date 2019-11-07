@@ -4,106 +4,10 @@
 #include <iostream>
 #include "linmath.h"
 
-template<typename T>
-class Point3 {
-public:
-    /* Constructors */
-    Point3() { x = y = z = 0; }
-
-    Point3(T vv) : x(vv), y(vv), z(vv) { assert(IsNotNull()); }
-
-    Point3(T x, T y, T z) : x(x), y(y), z(z) { assert(IsNotNull()); }
-
-    T operator[](int i) const {
-        assert(i >= 0 && i < 3);
-        if (i == 0) return x;
-        if (i == 1) return y;
-        return z;
-    }
-
-    T &operator[](int i) {
-        assert(i >= 0 && i < 3);
-        if (i == 0) return x;
-        if (i == 1) return y;
-        return z;
-    }
-
-    /* Debug */
-    friend std::ostream &operator<<(std::ostream &os, const Point3<T> &v) {
-        os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-        return os;
-    }
-
-    bool IsNotNull() const { return !(std::isnan(x) || std::isnan(y) || std::isnan(z)); }
-
-    /* Operators */
-    Point3<T> &operator=(const Point3<T> &p) {
-        assert(p.IsNotNull());
-        x = p.x;
-        y = p.y;
-        z = p.z;
-        return *this;
-    }
-
-    Point3<T> operator+(const Vector3<T> &v) const {
-        assert(v.IsNotNull());
-        return Point3<T>(x + v.x, y + v.y, z + v.z);
-    }
-
-    Point3<T> &operator+=(const Vector3<T> &v) {
-        assert(v.IsNotNull());
-        x += v.x;
-        y += v.y;
-        z += v.z;
-        return *this;
-    }
-
-    Vector3<T> operator-(const Point3<T> &p) const {
-        assert(p.IsNotNull());
-        return Vector3<T>(x - p.x, y - p.y, z - p.z);
-    }
-
-    Point3<T> operator-(const Vector3<T> &v) const {
-        assert(v.IsNotNull());
-        return Point3<T>(x - v.x, y - v.y, z - v.z);
-    }
-
-    Point3<T> &operator-=(const Vector3<T> &v) {
-        assert(v.IsNotNull());
-        x -= v.x;
-        y -= v.y;
-        z -= v.z;
-        return *this;
-    }
-
-    Point3<T> &operator+=(const Point3<T> &p) {
-        assert(p.IsNotNull());
-        x += p.x;
-        y += p.y;
-        z += p.z;
-        return *this;
-    }
-
-    Point3<T> operator+(const Point3<T> &p) const {
-        assert(p.IsNotNull());
-        return Point3<T>(x + p.x, y + p.y, z + p.z);
-    }
-
-    bool operator==(const Point3<T> &p) const {
-        assert(p.IsNotNull());
-        return x == p.x && y == p.y && z == p.z;
-    }
-
-    bool operator!=(const Point3<T> &p) const {
-        assert(p.IsNotNull());
-        return x != p.x || y != p.y || z != p.z;
-    }
-
-    T x, y, z;
-};
-
-typedef Point3<float> Point3f;
-typedef Point3<int> Point3i;
+#include <fmt/format.h>
+// This import is needed to allow for overrided ostream operators
+// (according to {fmt}), but it does not directly do anything.
+#include <fmt/ostream.h>
 
 template<typename T>
 class Vector3 {
@@ -111,11 +15,14 @@ public:
     /* Constructors */
     Vector3() { x = y = z = 0; }
 
-    Vector3(T vv) : x(vv), y(vv), z(vv) { assert(IsNotNull()); }
+    explicit Vector3(T vv) : x(vv), y(vv), z(vv) { assert(IsNotNull()); }
 
-    Vector3(T x, T y, T z) : x(x), y(y), z(z) { assert(IsNotNull()); }
+    Vector3(T x, T y, T z) : x(x), y(y), z(z) {
+//        fmt::print("{}, {}, {}\n", x, y, z);
+        assert(IsNotNull());
+    }
 
-    explicit Vector3(const Point3<T> &p) {
+    Vector3(const Vector3<T> &p) {
         assert(p.IsNotNull());
         x = p.x;
         y = p.y;
@@ -150,6 +57,16 @@ public:
         x = v.x;
         y = v.y;
         z = v.z;
+        return *this;
+    }
+
+
+    /* Operators */
+    Vector3<T> &operator=(const T &s) {
+        assert(!std::isnan(s));
+        x = x * s;
+        y = y * s;
+        z = z * s;
         return *this;
     }
 
@@ -234,6 +151,8 @@ public:
     Ray(const Vector3f &origin, const Vector3f &direction) : origin(origin), direction(direction) {
         assert(origin.IsNotNull() && direction.IsNotNull());
     }
+
+    Vector3f pointOnRayAtTime(float time) const { return origin + direction * time; }
 
     Vector3f origin;
     Vector3f direction;

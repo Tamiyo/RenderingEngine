@@ -8,9 +8,6 @@
 #include <cassert>
 
 template<typename T>
-class Point3;
-
-template<typename T>
 class Vector3;
 
 template<typename T>
@@ -33,7 +30,8 @@ Vector3<T> CrossProduct(const Vector3<T> &v1, const Vector3<T> &v2) {
 template<typename T>
 Vector3<T> Normalize(const Vector3<T> &v) {
     assert (v.IsNotNull());
-    return v / v.Length();
+    float inverse = 1.0f / v.Length();
+    return v * inverse;
 }
 
 #endif //RENDERENGINE_LINMATH_H

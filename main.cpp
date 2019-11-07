@@ -1,76 +1,109 @@
 #include <fmt/format.h>
-
-#include <cmath>
-#include <vector>
-
 // This import is needed to allow for overrided ostream operators
 // (according to {fmt}), but it does not directly do anything.
 #include <fmt/ostream.h>
+
+#include <cmath>
+#include <vector>
+#include <random>
+
 #include <fstream>
 
 #include "primitives/geometry.h"
-#include "shapes/sphere.h"
+#include "film/camera.h"
 #include "film/color.h"
+#include "shapes/sphere.h"
+#include "algorithm/raytracing.h"
 
+
+int screenWidth = 200;
+int screenHeight = 100;
+float ASPECT_RATIO = (float) screenWidth / (float) screenHeight;
+float FOV = 90;
+
+int samples = 100;
 
 int main() {
+    /*-------------*/
+    /* Frame Setup */
+    /*-------------*/
 
-    // Frame Setup
-    int SCREEN_WIDTH = 500;
-    int SCREEN_HEIGHT = 500;
-    fmt::print("Rendering a {}x{} image...", SCREEN_WIDTH, SCREEN_HEIGHT);
+    fmt::print("Rendering a {}x{} image...\n", screenWidth, screenHeight);
 
     // File that we write our image out to
     std::ofstream out(R"(D:\Documents\RenderEngine\images\out.ppm)");
-    out << "P3\n" << SCREEN_WIDTH << "\n" << SCREEN_HEIGHT << "\n" << "255\n";
+    out << "P3\n" << screenWidth << " " << screenHeight << "\n255\n";
 
-    // Matrix of pixels to display
-    std::vector<std::vector<Color> > pixel_collection(SCREEN_HEIGHT, std::vector<Color>(SCREEN_WIDTH));
+    /*--------------*/
+    /* Camera Setup */
+    /*--------------*/
+    // Camera position at coordinate (0, 0, 0)
+    Camera camera(Vector3f(0, 0, 0), screenWidth, screenHeight);
 
-    // Default objects to use in our scene
-    Color white(255, 255, 255);
-    Color black(0, 0, 0);
-    Color red(255, 0, 0);
-    Sphere sphere(Vector3f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 50), 50.0);
-
-    // Using a sphere as a light source bc we are lazy rn
-    Sphere light(Vector3f(0, 0, 50), 1);
+    /*-------------*/
+    /* Shape Setup */
+    /*-------------*/
+    std::vector<Shape *> shapes;
+    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5));
+    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100));
 
 
+
+    /*-----------*/
+    /* Rendering */
+    /*-----------*/
     // For each pixel
-    for (int y = 0; y < SCREEN_HEIGHT; y++) {
-        for (int x = 0; x < SCREEN_WIDTH; x++) {
-            pixel_collection[y][x] = black;
+    int previous = -1;
+    for (int y = screenHeight - 1; y >= 0; y--) {
 
-            // Send a ray through each pixel
-            Ray ray(Vector3f(x, y, 0), Vector3f(0, 0, 1));
+        /* DEBUG */
+        int percent = (int) std::round(((float) (screenHeight - y) / (float) screenHeight) * 100);
+        if (percent % 10 == 0 && percent > previous) {
+            fmt::print("Rendering {}% Complete\n", percent);
+            previous = percent;
+        }
 
-            // Time T on the Ray (More on this later)
-            double t = 20000;
+        for (int x = 0; x < screenWidth; x++) {
 
-            // Check for intersections with shapes
-            if (sphere.intersect(ray, t)) {
+            // Creating the background color
+            Color color(0, 0, 0);
 
-                // Point of intersection
-                Vector3f pointOfIntersection = ray.origin + ray.direction * t;
+            // For each sample, get a better pixel value. Note this will be replaced on a per-object basis
+            for (int i = 0; i < samples; i++) {
+                // Cast a ray from the camera "eye" origin through each pixel
+                float u = (float(x) + GenerateRandomNumber()) / float(screenWidth);
+                float v = (float(y) + GenerateRandomNumber()) / float(screenHeight);
 
-                // Color the pixel based on the light and normal vectors of an object
-                Vector3f L = light.center - pointOfIntersection;
-                Vector3f N = sphere.GetNormalVectorAtPoint(pointOfIntersection);
-                double dt = DotProduct(Normalize(L), Normalize(N));
-
-                // Assign the new color value based no the light reflection
-                Color tmp = (red + white * dt) * 0.5;
-                pixel_collection[y][x] = tmp.clamp255();
+                Ray ray = camera.GetRay(u, v);
+                color = color + TraceRay(camera, ray, shapes);
             }
 
-            // Write the pixel data out to the file
-            out << (int) pixel_collection[y][x].r << std::endl;
-            out << (int) pixel_collection[y][x].g << std::endl;
-            out << (int) pixel_collection[y][x].b << std::endl;
-        }
-    }
+            color = (color / samples);
+            color = Color(std::sqrt(color.r), std::sqrt(color.g), std::sqrt(color.b));
+            color = Color(int(color.r * 255.99), int(color.g * 255.99), int(color.b * 255.99));
+            out << (int) color.r << " " << (int) color.g << " " << (int) color.b << "\n";
 
+            // distanceMin = infinity
+            // For every object in the scene
+            //      If distance = intersect(ray, object)
+            //          if distance < distanceMin
+            //              closestObject = object
+            //              distanceMin = distance
+
+            // If distanceMin > infinityThreshold
+            //      pixelColor = background color
+            // Else
+            //      pixelColor = color of object at distanceMin along ray
+
+        }
+        // Compute color at the intersection point
+    }
     out.close();
     return 0;
 }
+
+
+
+
+
+
