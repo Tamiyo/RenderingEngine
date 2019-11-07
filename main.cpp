@@ -18,8 +18,8 @@
 
 int screenWidth = 200;
 int screenHeight = 100;
-float ASPECT_RATIO = (float) screenWidth / (float) screenHeight;
-float FOV = 90;
+float aspectRatio = (float) screenWidth / (float) screenHeight;
+float fov = 90;
 
 int samples = 100;
 
