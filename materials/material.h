@@ -8,7 +8,7 @@
 
 class Material {
 public:
-    virtual bool Scatter(const Ray &ray, ShapeIntersectionBundle &bundle, Vector3f &attenuation,
+    virtual bool Scatter(const Ray &ray, const ShapeIntersectionBundle &bundle, Vector3f &attenuation,
                          Ray &scattered) const = 0;
 };
 
@@ -16,7 +16,7 @@ class Lambertian : public Material {
 public:
     explicit Lambertian(const Vector3f &albedo) : albedo(albedo) { assert(albedo.IsNotNull()); }
 
-    bool Scatter(const Ray &ray, ShapeIntersectionBundle &bundle, Vector3f &attenuation,
+    bool Scatter(const Ray &ray, const ShapeIntersectionBundle &bundle, Vector3f &attenuation,
                  Ray &scattered) const override {
         Vector3f target(bundle.point + bundle.normal + GenerateRandomVectorOnUnitSphere());
         scattered = Ray(bundle.point, target - bundle.point);
@@ -31,7 +31,7 @@ class Metal : public Material {
 public:
     explicit Metal(const Vector3f &albedo) : albedo(albedo) { assert(albedo.IsNotNull()); };
 
-    bool Scatter(const Ray &ray, ShapeIntersectionBundle &bundle, Vector3f &attenuation,
+    bool Scatter(const Ray &ray, const ShapeIntersectionBundle &bundle, Vector3f &attenuation,
                  Ray &scattered) const override {
         Vector3f reflected = Reflection(Normalize(ray.direction), bundle.normal);
         scattered = Ray(bundle.point, reflected);

@@ -68,7 +68,7 @@ int main() {
         for (int x = 0; x < screenWidth; x++) {
 
             // Creating the background color
-            Vector3f color(0, 0, 0);
+            Vector3f color(0);
 
             // For each sample, get a better pixel value by averaging the average color values instead of
             // performing only a single iteration.
