@@ -43,9 +43,6 @@ Vector3f TraceRay(const Ray &ray, const std::vector<Shape *> &shapes, const int 
             return Vector3f(0);
         }
 
-        Vector3f unitSphereVector = GenerateRandomVectorOnUnitSphere();
-        Vector3f target(bundle.point + bundle.normal + unitSphereVector);
-        return TraceRay(Ray(bundle.point, target - bundle.point), shapes, depth + 1) * 0.5;
     } else {
         // TODO [Placeholder] - Remove this when actual background colors get added
         Vector3f unitDirection = Normalize(ray.direction);

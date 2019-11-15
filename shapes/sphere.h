@@ -30,18 +30,18 @@ public:
         float discriminant = b * b - a * c;
 
         if (discriminant > 0) {
-            auto temp = float((-b - std::sqrt(discriminant)) / a);
-            if (temp < t_max && temp > t_min) {
-                bundle.time = temp;
-                bundle.point = ray.pointOnRayAtTime(temp);
+            auto t = float((-b - std::sqrt(discriminant)) / a);
+            if (t < t_max && t > t_min) {
+                bundle.time = t;
+                bundle.point = ray.pointOnRayAtTime(t);
                 bundle.normal = (bundle.point - center) / radius;
                 bundle.material = material;
                 return true;
             }
-            temp = float((-b + std::sqrt(discriminant)) / a);
-            if (temp < t_max && temp > t_min) {
-                bundle.time = temp;
-                bundle.point = ray.pointOnRayAtTime(temp);
+            t = float((-b + std::sqrt(discriminant)) / a);
+            if (t < t_max && t > t_min) {
+                bundle.time = t;
+                bundle.point = ray.pointOnRayAtTime(t);
                 bundle.normal = (bundle.point - center) / radius;
                 bundle.material = material;
                 return true;

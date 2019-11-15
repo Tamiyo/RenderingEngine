@@ -11,7 +11,6 @@ public:
     virtual ~Shape() = default;
 
     Shape() = default;
-
 };
 
 

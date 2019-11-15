@@ -51,7 +51,7 @@ public:
 
     bool IsNotNull() const { return !(std::isnan(x) || std::isnan(y) || std::isnan(z)); }
 
-    /* Operators */
+
     Vector3<T> &operator=(const Vector3<T> &v) {
         assert(v.IsNotNull());
         x = v.x;
@@ -144,11 +144,41 @@ public:
 
     /* Data */
     T x, y, z;
+    T w = 1;
 
 };
 
 typedef Vector3<float> Vector3f;
 typedef Vector3<int> Vector3i;
+
+template<typename T>
+class Matrix4 {
+public:
+    /* Constructors */
+    Matrix4() { m = 0; }
+
+    explicit Matrix4(T vv) : m(vv) { assert(IsNotNull()); }
+
+    Matrix4(Vector3<T> x, Vector3<T> y, Vector3<T> z) {
+        m = Vector3<Vector3<T>>(x, y, z);
+        assert(IsNotNull());
+    }
+
+    /* Debug */
+    bool IsNotNull() const { return !(m[0].IsNotNull() || m[1].IsNotNull() || m[2].IsNotNull()); }
+
+    /* Operators */
+    Matrix4<T> operator*(const Vector3<T> &v) const {
+        Vector3f a = Vector3f(DotProduct(m[0], v));
+        Vector3f b = Vector3f(DotProduct(m[1], v));
+        Vector3f c = Vector3f(DotProduct(m[2], v));
+        return Matrix4<T>(a, b, c);
+    }
+
+    Vector3<Vector3<T>> m;
+};
+
+typedef Matrix4<float> Matrix4f;
 
 class Ray {
 public:

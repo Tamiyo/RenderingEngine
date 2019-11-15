@@ -15,6 +15,9 @@
 #include "shapes/sphere.h"
 #include "algorithm/raytracing.h"
 #include "materials/material.h"
+#include "shapes/triangle.h"
+
+#include "importer/collada.h"
 
 
 int screenWidth = 200;
@@ -22,9 +25,13 @@ int screenHeight = 100;
 float aspectRatio = (float) screenWidth / (float) screenHeight;
 float fov = 90;
 
-int samples = 100;
+int samples = 10;
 
 int main() {
+
+    /* Importer */
+    ColladaImporter colladaImporter(R"(D:\Documents\RenderEngine\test\cube3.dae)");
+
     /*-------------*/
     /* Frame Setup */
     /*-------------*/
@@ -45,10 +52,12 @@ int main() {
     /* Shape Setup */
     /*-------------*/
     std::vector<Shape *> shapes;
-    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5, new Lambertian(Vector3f(0.8, 0.3, 0.3))));
-    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100, new Lambertian(Vector3f(0.8, 0.8, 0.0))));
-    shapes.push_back(new Sphere(Vector3f(1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.6, 0.2))));
-    shapes.push_back(new Sphere(Vector3f(-1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.8, 0.8))));
+    shapes = colladaImporter.GetShapes();
+//    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5, new Lambertian(Vector3f(0.8, 0.3, 0.3))));
+//    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100, new Lambertian(Vector3f(0.8, 0.8, 0.0))));
+//    shapes.push_back(new Sphere(Vector3f(1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.6, 0.2))));
+//    shapes.push_back(new Sphere(Vector3f(-1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.8, 0.8))));
+//    shapes.push_back(new Triangle(Vector3f(1,0,-1), Vector3f(-1, -0.3, -1),Vector3f(0, 0.7, -1), new Lambertian(Vector3f(0.8, 0.3, 0.3))));
 
 
     /*-----------*/
