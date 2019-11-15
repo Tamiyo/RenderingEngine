@@ -20,17 +20,17 @@
 #include "importer/collada.h"
 
 
-int screenWidth = 200;
-int screenHeight = 100;
+int screenWidth = 400;
+int screenHeight = 200;
 float aspectRatio = (float) screenWidth / (float) screenHeight;
 float fov = 90;
 
-int samples = 10;
+int samples = 1;
 
 int main() {
 
     /* Importer */
-    ColladaImporter colladaImporter(R"(D:\Documents\RenderEngine\test\cube3.dae)");
+//    ColladaImporter colladaImporter(R"");
 
     /*-------------*/
     /* Frame Setup */
@@ -52,9 +52,10 @@ int main() {
     /* Shape Setup */
     /*-------------*/
     std::vector<Shape *> shapes;
-    shapes = colladaImporter.GetShapes();
+//    shapes = colladaImporter.GetShapes();
 //    shapes.push_back(new Sphere(Vector3f(0, 0, -1), 0.5, new Lambertian(Vector3f(0.8, 0.3, 0.3))));
-//    shapes.push_back(new Sphere(Vector3f(0, -100.5, -1), 100, new Lambertian(Vector3f(0.8, 0.8, 0.0))));
+//    shapes.push_back(new Sphere(Vector3f(3, 0, -2), 0.5, new Lambertian(Vector3f(0.8, 0.8, 0.3))));
+//    shapes.push_back(new Sphere(Vector3f(0, -100.5, -4), 100, new Lambertian(Vector3f(0.8, 0.8, 0.0))));
 //    shapes.push_back(new Sphere(Vector3f(1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.6, 0.2))));
 //    shapes.push_back(new Sphere(Vector3f(-1, 0, -1), 0.5, new Metal(Vector3f(0.8, 0.8, 0.8))));
 //    shapes.push_back(new Triangle(Vector3f(1,0,-1), Vector3f(-1, -0.3, -1),Vector3f(0, 0.7, -1), new Lambertian(Vector3f(0.8, 0.3, 0.3))));

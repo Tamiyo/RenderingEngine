@@ -17,6 +17,12 @@ T DotProduct(const Vector3<T> &v1, const Vector3<T> &v2) {
 }
 
 template<typename T>
+T DotProduct4(const Vector3<T> &v1, const Vector3<T> &v2) {
+    assert (v1.IsNotNull() && v2.IsNotNull());
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2] + v1[3] * v2[3];
+}
+
+template<typename T>
 Vector3<T> CrossProduct(const Vector3<T> &v1, const Vector3<T> &v2) {
     assert (v1.IsNotNull() && v2.IsNotNull());
     T v1x = v1.x, v1y = v1.y, v1z = v1.z;
